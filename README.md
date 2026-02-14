@@ -22,23 +22,13 @@
 
 The system follows a strict **Parent-Child-Doctor** hierarchy:
 
-```mermaid
-flowchart TD
-    User([User Prompt]) -->|"1. Intention"| Parent[Parent Orchestrator]
-    Parent -->|"2. Spawn"| Dev[Dev Agents Alpha/Beta]
-    Parent -->|"2. Spawn"| Ops[DevOps Agent]
-    
-    subgraph ExecutionLayer ["Execution Layer"]
-        Dev -->|"Code Gen"| FileSystem
-        Ops -->|"Docker/CI"| FileSystem
-    end
-    
-    FileSystem -->|"3. Audit"| Doctor[Doctor Agent]
-    Doctor -->|"4. Heal"| FileSystem
-    Doctor -->|"5. Report"| Parent
-```
+### 🌌 System Neural Architecture
 
-### Key Components
+*> "The architecture is not built; it is grown."*
+
+![Neural Architecture](visualization/agent_tree_diagram.png)
+
+### 🧩 Core Biological Components
 
 | Component | Role | Description |
 |-----------|------|-------------|
