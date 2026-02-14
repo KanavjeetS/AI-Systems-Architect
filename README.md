@@ -97,7 +97,7 @@ Visit **http://localhost:3000** to access the Neural Dashboard.
 
 ## 🎥 Workflow Visualization
 
-*(See `agent_flow.mp4` for a cinematic tour)*
+*(See `agent_workflow.gif` for a cinematic tour)*
 
 ---
 
