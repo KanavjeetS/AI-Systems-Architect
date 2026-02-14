@@ -1,0 +1,10 @@
+{
+  "name": "synapse-x-monorepo",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd synapse-x-frontend && npm install && npm run build"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
