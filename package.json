@@ -2,7 +2,8 @@
   "name": "synapse-x-monorepo",
   "version": "1.0.0",
   "scripts": {
-    "build": "cd synapse-x-frontend && npm install && npm run build"
+    "build": "cd synapse-x-frontend && npm ci && npm run build",
+    "vercel-build": "cd synapse-x-frontend && npm ci && npm run build"
   },
   "engines": {
     "node": "20.x"
