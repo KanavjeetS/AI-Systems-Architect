@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SYNAPSE-X — AI Engineering Organism</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.7);
+      --bg-glass: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.06);
+      --border-glow: rgba(99, 102, 241, 0.3);
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-indigo: #818cf8;
+      --accent-violet: #a78bfa;
+      --accent-cyan: #22d3ee;
+      --accent-emerald: #34d399;
+      --accent-rose: #fb7185;
+      --accent-amber: #fbbf24;
+      --accent-purple: #c084fc;
+      --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-2: linear-gradient(135deg, #22d3ee 0%, #818cf8 50%, #a78bfa 100%);
+      --gradient-mcp: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #22d3ee 100%);
+      --gradient-glow: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Ambient background ─────────────────────── */
+    .ambient {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(167, 139, 250, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 30% at 50% 50%, rgba(34, 211, 238, 0.04) 0%, transparent 40%);
+    }
+
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* ── Layout ──────────────────────────────────── */
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* ── Header ──────────────────────────────────── */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: .4rem 1.2rem .4rem .6rem;
+      font-size: .75rem;
+      color: var(--text-secondary);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .logo-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .4;
+      }
+    }
+
+    .title {
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 900;
+      background: var(--gradient-2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-top: .6rem;
+      font-weight: 400;
+    }
+
+    /* ── MCP Status Panel ────────────────────────── */
+    .mcp-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1.2rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(20px);
+    }
+
+    .mcp-panel-header {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: 1rem;
+    }
+
+    .mcp-panel-title {
+      font-size: .85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      background: var(--gradient-mcp);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .mcp-panel-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-purple);
+      animation: pulse-dot 1.5s infinite;
+    }
+
+    .mcp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: .8rem;
+    }
+
+    .mcp-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: .8rem;
+      padding: 1rem;
+      transition: border-color .3s, transform .2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mcp-card:hover {
+      border-color: rgba(168, 85, 247, .3);
+      transform: translateY(-1px);
+    }
+
+    .mcp-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-mcp);
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .mcp-card:hover::before {
+      opacity: 1;
+    }
+
+    .mcp-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: .5rem;
+    }
+
+    .mcp-card-name {
+      font-weight: 600;
+      font-size: .85rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+
+    .mcp-status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .mcp-status-dot.connected {
+      background: var(--accent-emerald);
+      box-shadow: 0 0 6px rgba(52, 211, 153, .5);
+    }
+
+    .mcp-status-dot.active {
+      background: var(--accent-cyan);
+      box-shadow: 0 0 6px rgba(34, 211, 238, .5);
+    }
+
+    .mcp-status-dot.running {
+      background: var(--accent-amber);
+      box-shadow: 0 0 6px rgba(251, 191, 36, .5);
+      animation: pulse-dot 1s infinite;
+    }
+
+    .mcp-status-label {
+      font-size: .6rem;
+      padding: .1rem .45rem;
+      border-radius: 999px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .mcp-status-label.connected {
+      background: rgba(52, 211, 153, .12);
+      color: var(--accent-emerald);
+    }
+
+    .mcp-status-label.active {
+      background: rgba(34, 211, 238, .12);
+      color: var(--accent-cyan);
+    }
+
+    .mcp-status-label.running {
+      background: rgba(251, 191, 36, .12);
+      color: var(--accent-amber);
+    }
+
+    .mcp-card-desc {
+      font-size: .75rem;
+      color: var(--text-muted);
+      margin-bottom: .6rem;
+    }
+
+    .mcp-card-caps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .3rem;
+    }
+
+    .mcp-cap {
+      font-size: .6rem;
+      padding: .15rem .4rem;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .mcp-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: .6rem;
+      padding-top: .5rem;
+      border-top: 1px solid var(--border);
+      font-size: .7rem;
+      color: var(--text-muted);
+    }
+
+    .mcp-invocations {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--accent-purple);
+    }
+
+    /* ── Prompt Card ─────────────────────────────── */
+    .prompt-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1.2rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(20px);
+      transition: border-color .3s;
+    }
+
+    .prompt-card:focus-within {
+      border-color: var(--border-glow);
+    }
+
+    .input-group {
+      display: flex;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .prompt-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: .8rem;
+      padding: 1rem 1.2rem;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color .3s, box-shadow .3s;
+    }
+
+    .prompt-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .prompt-input:focus {
+      border-color: var(--accent-indigo);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, .15);
+    }
+
+    .btn-build {
+      background: var(--gradient-1);
+      border: none;
+      border-radius: .8rem;
+      padding: 1rem 2rem;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      transition: transform .15s, box-shadow .3s;
+      white-space: nowrap;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-build:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, .3);
+    }
+
+    .btn-build:active {
+      transform: translateY(0);
+    }
+
+    .btn-build:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-build .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, .3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ── Status bar ──────────────────────────────── */
+    .status-bar {
+      display: none;
+      margin-top: 1.2rem;
+      padding: 1rem 1.2rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: .6rem;
+      font-size: .85rem;
+      color: var(--text-secondary);
+    }
+
+    .status-bar.active {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+    }
+
+    .status-bar .icon {
+      font-size: 1.2rem;
+    }
+
+    /* ── MCP Activity Feed ───────────────────────── */
+    .mcp-activity-section {
+      display: none;
+      margin-bottom: 2rem;
+    }
+
+    .mcp-activity-section.active {
+      display: block;
+    }
+
+    .mcp-activity-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      backdrop-filter: blur(20px);
+    }
+
+    .mcp-activity-header {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: 1rem;
+      font-size: .85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      background: var(--gradient-mcp);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .mcp-activity-list {
+      list-style: none;
+    }
+
+    .mcp-activity-item {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .55rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .82rem;
+      color: var(--text-secondary);
+      animation: fadeSlideIn .4s ease both;
+    }
+
+    .mcp-activity-item:last-child {
+      border-bottom: none;
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .mcp-activity-badge {
+      font-size: .6rem;
+      padding: .15rem .5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      flex-shrink: 0;
+      background: rgba(168, 85, 247, .12);
+      color: var(--accent-purple);
+      text-transform: uppercase;
+    }
+
+    /* ── Pipeline stages ─────────────────────────── */
+    .pipeline {
+      display: none;
+      margin-bottom: 2rem;
+    }
+
+    .pipeline.active {
+      display: block;
+    }
+
+    .stage {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+      transition: border-color .3s;
+    }
+
+    .stage:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .stage-header {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      padding: 1.2rem 1.5rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background .2s;
+    }
+
+    .stage-header:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .stage-icon {
+      font-size: 1.4rem;
+    }
+
+    .stage-title {
+      font-weight: 600;
+      font-size: .95rem;
+      flex: 1;
+    }
+
+    .stage-badge {
+      font-size: .7rem;
+      padding: .2rem .6rem;
+      border-radius: 999px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .badge-success {
+      background: rgba(52, 211, 153, .12);
+      color: var(--accent-emerald);
+    }
+
+    .badge-healing {
+      background: rgba(251, 113, 133, .12);
+      color: var(--accent-rose);
+    }
+
+    .badge-info {
+      background: rgba(34, 211, 238, .12);
+      color: var(--accent-cyan);
+    }
+
+    .badge-mcp {
+      background: rgba(168, 85, 247, .12);
+      color: var(--accent-purple);
+    }
+
+    .stage-chevron {
+      color: var(--text-muted);
+      transition: transform .3s;
+      font-size: .9rem;
+    }
+
+    .stage.open .stage-chevron {
+      transform: rotate(180deg);
+    }
+
+    .stage-body {
+      display: none;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .stage.open .stage-body {
+      display: block;
+    }
+
+    .code-block {
+      background: #0d1117;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: .6rem;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .8rem;
+      line-height: 1.6;
+      color: #c9d1d9;
+      max-height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: .8rem;
+      margin-bottom: 1rem;
+    }
+
+    .meta-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: .6rem;
+      padding: .8rem 1rem;
+    }
+
+    .meta-label {
+      font-size: .7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: .3rem;
+    }
+
+    .meta-value {
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* ── Healing issues list ─────────────────────── */
+    .issues-list {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1rem;
+    }
+
+    .issues-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: .6rem;
+      padding: .6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .85rem;
+      color: var(--text-secondary);
+    }
+
+    .issues-list li:last-child {
+      border-bottom: none;
+    }
+
+    .severity {
+      font-size: .65rem;
+      padding: .15rem .5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      text-transform: uppercase;
+      flex-shrink: 0;
+      margin-top: .1rem;
+    }
+
+    .sev-critical {
+      background: rgba(251, 113, 133, .15);
+      color: var(--accent-rose);
+    }
+
+    .sev-warning {
+      background: rgba(251, 191, 36, .15);
+      color: var(--accent-amber);
+    }
+
+    .sev-info {
+      background: rgba(34, 211, 238, .12);
+      color: var(--accent-cyan);
+    }
+
+    /* ── Stats ────────────────────────────────────── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.2rem;
+      text-align: center;
+      backdrop-filter: blur(20px);
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: var(--gradient-2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-value.mcp-stat {
+      background: var(--gradient-mcp);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: .7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-top: .3rem;
+    }
+
+    /* ── Logs ────────────────────────────────────── */
+    .log-entry {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: .8rem;
+      align-items: center;
+      padding: .6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .82rem;
+    }
+
+    .log-agent {
+      color: var(--accent-indigo);
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+    }
+
+    .log-agent.mcp-log {
+      color: var(--accent-purple);
+    }
+
+    .log-event {
+      color: var(--text-secondary);
+    }
+
+    .log-time {
+      color: var(--text-muted);
+      font-size: .72rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── Responsive ──────────────────────────────── */
+    @media (max-width: 640px) {
+      .app {
+        padding: 1rem;
+      }
+
+      .input-group {
+        flex-direction: column;
+      }
+
+      .btn-build {
+        justify-content: center;
+      }
+
+      .mcp-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ambient"></div>
+  <div class="grid-bg"></div>
+
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-badge"><span class="dot"></span> System Online</div>
+      <h1 class="title">SYNAPSE-X</h1>
+      <p class="subtitle">Self-Organizing AI Engineering Organism</p>
+    </header>
+
+    <!-- MCP Status Panel -->
+    <div class="mcp-panel" id="mcpPanel">
+      <div class="mcp-panel-header">
+        <span class="mcp-panel-dot"></span>
+        <span class="mcp-panel-title">⚡ MCP Tool-Server Registry — Live Status</span>
+      </div>
+      <div class="mcp-grid" id="mcpGrid">
+        <!-- Populated by JS -->
+        <div style="color:var(--text-muted);font-size:.85rem;">Loading MCP servers…</div>
+      </div>
+    </div>
+
+    <!-- Prompt Input -->
+    <div class="prompt-card">
+      <div class="input-group">
+        <input class="prompt-input" id="promptInput" type="text" placeholder="Describe what you want to build…"
+          value="Build a real-time chat application with WebSocket support" />
+        <button class="btn-build" id="buildBtn" onclick="runBuild()">
+          <span id="btnContent">⚡ Build</span>
+        </button>
+      </div>
+      <div class="status-bar" id="statusBar">
+        <span class="icon" id="statusIcon">🔄</span>
+        <span id="statusText">Initializing pipeline…</span>
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="stats-row" id="statsRow" style="display:none;">
+      <div class="stat-card">
+        <div class="stat-value" id="statDuration">—</div>
+        <div class="stat-label">Pipeline (s)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statIssues">—</div>
+        <div class="stat-label">Issues Found</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statHealed">—</div>
+        <div class="stat-label">Auto-Healed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statEndpoints">—</div>
+        <div class="stat-label">Endpoints</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value mcp-stat" id="statMCP">—</div>
+        <div class="stat-label">MCP Invocations</div>
+      </div>
+    </div>
+
+    <!-- MCP Activity Feed -->
+    <div class="mcp-activity-section" id="mcpActivitySection">
+      <div class="mcp-activity-card">
+        <div class="mcp-activity-header">
+          <span>📡</span> MCP Tool Orchestration — Activity Feed
+        </div>
+        <ul class="mcp-activity-list" id="mcpActivityList"></ul>
+      </div>
+    </div>
+
+    <!-- Pipeline Stages -->
+    <div class="pipeline" id="pipeline">
+
+      <!-- Stage 1: Parent -->
+      <div class="stage open" id="stageParent">
+        <div class="stage-header" onclick="toggleStage('stageParent')">
+          <span class="stage-icon">🧠</span>
+          <span class="stage-title">Parent Agent — Cognitive Architect</span>
+          <span class="stage-badge badge-success">analyzed</span>
+          <span class="stage-chevron">▼</span>
+        </div>
+        <div class="stage-body" id="bodyParent"></div>
+      </div>
+
+      <!-- Stage 2: Dev -->
+      <div class="stage" id="stageDev">
+        <div class="stage-header" onclick="toggleStage('stageDev')">
+          <span class="stage-icon">💻</span>
+          <span class="stage-title">Developer Agent — Code Generation</span>
+          <span class="stage-badge badge-success">generated</span>
+          <span class="stage-chevron">▼</span>
+        </div>
+        <div class="stage-body" id="bodyDev"></div>
+      </div>
+
+      <!-- Stage 3: DevOps -->
+      <div class="stage" id="stageDevOps">
+        <div class="stage-header" onclick="toggleStage('stageDevOps')">
+          <span class="stage-icon">🚀</span>
+          <span class="stage-title">DevOps Agent — Infrastructure</span>
+          <span class="stage-badge badge-info">deployed</span>
+          <span class="stage-chevron">▼</span>
+        </div>
+        <div class="stage-body" id="bodyDevOps"></div>
+      </div>
+
+      <!-- Stage 4: Doctor -->
+      <div class="stage" id="stageDoctor">
+        <div class="stage-header" onclick="toggleStage('stageDoctor')">
+          <span class="stage-icon">🩺</span>
+          <span class="stage-title">Doctor Agent — Audit &amp; Healing</span>
+          <span class="stage-badge badge-healing">healed</span>
+          <span class="stage-chevron">▼</span>
+        </div>
+        <div class="stage-body" id="bodyDoctor"></div>
+      </div>
+
+      <!-- Stage 5: GitHub -->
+      <div class="stage" id="stageGithub">
+        <div class="stage-header" onclick="toggleStage('stageGithub')">
+          <span class="stage-icon">🐙</span>
+          <span class="stage-title">GitHub MCP — Repository Push</span>
+          <span class="stage-badge badge-mcp">mcp tool</span>
+          <span class="stage-chevron">▼</span>
+        </div>
+        <div class="stage-body" id="bodyGithub"></div>
+      </div>
+
+      <!-- Logs -->
+      <div class="stage" id="stageLogs">
+        <div class="stage-header" onclick="toggleStage('stageLogs')">
+          <span class="stage-icon">📊</span>
+          <span class="stage-title">Pipeline Logs — Observability</span>
+          <span class="stage-badge badge-mcp">mcp traces</span>
+          <span class="stage-chevron">▼</span>
+        </div>
+        <div class="stage-body" id="bodyLogs"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── MCP Status Panel ─────────────────────────── */
+    async function loadMCPStatus() {
+      try {
+        const res = await fetch('/mcp/status');
+        const data = await res.json();
+        const grid = document.getElementById('mcpGrid');
+        grid.innerHTML = '';
+        for (const [id, server] of Object.entries(data)) {
+          const s = server;
+          const statusClass = s.status;
+          const caps = (s.capabilities || []).map(c => `<span class="mcp-cap">${c}</span>`).join('');
+          const lastUsed = s.last_used ? new Date(s.last_used).toLocaleTimeString() : '—';
+          grid.innerHTML += `
+            <div class="mcp-card">
+              <div class="mcp-card-top">
+                <span class="mcp-card-name">
+                  <span class="mcp-status-dot ${statusClass}"></span>
+                  ${s.icon || '⚙️'} ${s.name || id}
+                </span>
+                <span class="mcp-status-label ${statusClass}">${s.status}</span>
+              </div>
+              <div class="mcp-card-desc">${s.description}</div>
+              <div class="mcp-card-caps">${caps}</div>
+              <div class="mcp-card-footer">
+                <span>Invocations: <span class="mcp-invocations">${s.invocations}</span></span>
+                <span>Last: ${lastUsed}</span>
+              </div>
+            </div>
+          `;
+        }
+      } catch {
+        document.getElementById('mcpGrid').innerHTML =
+          '<div style="color:var(--text-muted);font-size:.85rem;">Unable to reach MCP registry</div>';
+      }
+    }
+    loadMCPStatus();
+
+    /* ── Helpers ───────────────────────────────────── */
+    function toggleStage(id) {
+      document.getElementById(id).classList.toggle('open');
+    }
+
+    function setStatus(icon, text) {
+      const bar = document.getElementById('statusBar');
+      bar.classList.add('active');
+      document.getElementById('statusIcon').textContent = icon;
+      document.getElementById('statusText').textContent = text;
+    }
+
+    function escapeHtml(s) {
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    /* ── Build Pipeline ────────────────────────────── */
+    async function runBuild() {
+      const prompt = document.getElementById('promptInput').value.trim();
+      if (!prompt) return;
+
+      const btn = document.getElementById('buildBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Building…';
+
+      setStatus('🧠', 'Parent Agent analyzing prompt…');
+
+      try {
+        const res = await fetch('/build', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt })
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        renderResult(data);
+        setStatus('✅', `Pipeline completed in ${data.duration_seconds}s — ${(data.mcp_activity || []).length} MCP invocations`);
+        // Refresh MCP panel to show updated invocation counts
+        loadMCPStatus();
+      } catch (err) {
+        setStatus('❌', `Error: ${err.message}`);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '⚡ Build';
+      }
+    }
+
+    function renderResult(data) {
+      const stages = data.stages;
+
+      // Stats
+      const statsRow = document.getElementById('statsRow');
+      statsRow.style.display = '';
+      document.getElementById('statDuration').textContent = data.duration_seconds;
+      const doctorStats = stages['4_doctor_healing']?.stats || {};
+      document.getElementById('statIssues').textContent = doctorStats.issues_found ?? '—';
+      document.getElementById('statHealed').textContent = doctorStats.issues_healed ?? '—';
+      document.getElementById('statEndpoints').textContent = stages['2_dev_agent']?.status?.endpoints_created ?? '—';
+      document.getElementById('statMCP').textContent = (data.mcp_activity || []).length;
+
+      // MCP Activity Feed
+      const mcpActivity = data.mcp_activity || [];
+      if (mcpActivity.length) {
+        const section = document.getElementById('mcpActivitySection');
+        section.classList.add('active');
+        const list = document.getElementById('mcpActivityList');
+        list.innerHTML = '';
+        mcpActivity.forEach((item, i) => {
+          const li = document.createElement('li');
+          li.className = 'mcp-activity-item';
+          li.style.animationDelay = `${i * 0.06}s`;
+          // Parse MCP name from the string
+          const mcpMatch = item.match(/^.+?\s([\w\s]+MCP):/);
+          const mcpName = mcpMatch ? mcpMatch[1] : 'MCP';
+          li.innerHTML = `<span class="mcp-activity-badge">${escapeHtml(mcpName)}</span> <span>${escapeHtml(item)}</span>`;
+          list.appendChild(li);
+        });
+      }
+
+      // Pipeline visible
+      document.getElementById('pipeline').classList.add('active');
+
+      // ── Parent ──
+      const parent = stages['1_parent_analysis'];
+      let parentHtml = '<div class="meta-grid">';
+      parentHtml += `<div class="meta-item"><div class="meta-label">Engine</div><div class="meta-value">${parent.metadata?.engine || '—'}</div></div>`;
+      parentHtml += `<div class="meta-item"><div class="meta-label">Intent</div><div class="meta-value">${escapeHtml(parent.intent || '—')}</div></div>`;
+      parentHtml += `<div class="meta-item"><div class="meta-label">Categories</div><div class="meta-value">${(parent.categories || []).join(', ')}</div></div>`;
+      parentHtml += '</div>';
+      if (parent.task_graph?.length) {
+        parentHtml += '<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em;">Task Graph</div>';
+        parentHtml += '<div class="code-block">' + escapeHtml(JSON.stringify(parent.task_graph, null, 2)) + '</div>';
+      }
+      document.getElementById('bodyParent').innerHTML = parentHtml;
+
+      // ── Dev ──
+      const dev = stages['2_dev_agent'];
+      let devHtml = '<div class="meta-grid">';
+      devHtml += `<div class="meta-item"><div class="meta-label">Endpoints</div><div class="meta-value">${dev.status?.endpoints_created ?? '—'}</div></div>`;
+      devHtml += `<div class="meta-item"><div class="meta-label">Files</div><div class="meta-value">${dev.status?.files_generated ?? '—'}</div></div>`;
+      devHtml += '</div>';
+      if (dev.service_code) {
+        devHtml += '<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em;">Generated Service Code</div>';
+        devHtml += '<div class="code-block">' + escapeHtml(dev.service_code) + '</div>';
+      }
+      if (dev.route_definitions?.length) {
+        devHtml += '<div style="font-size:.8rem;color:var(--text-muted);margin:.8rem 0 .5rem;text-transform:uppercase;letter-spacing:.06em;">Route Definitions</div>';
+        devHtml += '<div class="code-block">' + escapeHtml(JSON.stringify(dev.route_definitions, null, 2)) + '</div>';
+      }
+      document.getElementById('bodyDev').innerHTML = devHtml;
+
+      // ── DevOps ──
+      const devops = stages['3_devops_agent'];
+      let devopsHtml = '<div class="meta-grid">';
+      devopsHtml += `<div class="meta-item"><div class="meta-label">Runtime</div><div class="meta-value">${devops.infra_metadata?.container_runtime ?? '—'}</div></div>`;
+      devopsHtml += `<div class="meta-item"><div class="meta-label">CI</div><div class="meta-value">${devops.infra_metadata?.ci_provider ?? '—'}</div></div>`;
+      devopsHtml += `<div class="meta-item"><div class="meta-label">Port</div><div class="meta-value">${devops.infra_metadata?.exposed_port ?? '—'}</div></div>`;
+      devopsHtml += '</div>';
+      if (devops.dockerfile) {
+        devopsHtml += '<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em;">Dockerfile</div>';
+        devopsHtml += '<div class="code-block">' + escapeHtml(devops.dockerfile) + '</div>';
+      }
+      if (devops.ci_config) {
+        devopsHtml += '<div style="font-size:.8rem;color:var(--text-muted);margin:.8rem 0 .5rem;text-transform:uppercase;letter-spacing:.06em;">CI/CD Pipeline</div>';
+        devopsHtml += '<div class="code-block">' + escapeHtml(devops.ci_config) + '</div>';
+      }
+      document.getElementById('bodyDevOps').innerHTML = devopsHtml;
+
+      // ── Doctor ──
+      const doctor = stages['4_doctor_healing'];
+      let doctorHtml = '<div class="meta-grid">';
+      doctorHtml += `<div class="meta-item"><div class="meta-label">Issues Found</div><div class="meta-value">${doctor.stats?.issues_found ?? '—'}</div></div>`;
+      doctorHtml += `<div class="meta-item"><div class="meta-label">Auto-Healed</div><div class="meta-value">${doctor.stats?.issues_healed ?? '—'}</div></div>`;
+      doctorHtml += `<div class="meta-item"><div class="meta-label">Advisory Only</div><div class="meta-value">${doctor.stats?.advisory_only ?? '—'}</div></div>`;
+      doctorHtml += '</div>';
+
+      if (doctor.issues_detected?.length) {
+        doctorHtml += '<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em;">Issues Detected</div>';
+        doctorHtml += '<ul class="issues-list">';
+        doctor.issues_detected.forEach(i => {
+          const sevClass = i.severity === 'critical' ? 'sev-critical' : i.severity === 'warning' ? 'sev-warning' : 'sev-info';
+          doctorHtml += `<li><span class="severity ${sevClass}">${i.severity}</span> <span><strong>${i.id}</strong> — ${escapeHtml(i.description)}</span></li>`;
+        });
+        doctorHtml += '</ul>';
+      }
+
+      if (doctor.improvement_summary?.length) {
+        doctorHtml += '<div style="font-size:.8rem;color:var(--text-muted);margin:.8rem 0 .5rem;text-transform:uppercase;letter-spacing:.06em;">Improvements Applied</div>';
+        doctorHtml += '<ul class="issues-list">';
+        doctor.improvement_summary.forEach(s => {
+          doctorHtml += `<li>${escapeHtml(s)}</li>`;
+        });
+        doctorHtml += '</ul>';
+      }
+
+      if (doctor.healed_code) {
+        doctorHtml += '<div style="font-size:.8rem;color:var(--text-muted);margin:.8rem 0 .5rem;text-transform:uppercase;letter-spacing:.06em;">Healed Code</div>';
+        doctorHtml += '<div class="code-block">' + escapeHtml(doctor.healed_code) + '</div>';
+      }
+      document.getElementById('bodyDoctor').innerHTML = doctorHtml;
+
+      // ── GitHub ──
+      const gh = stages['5_github_push'];
+      let ghHtml = '<div class="meta-grid">';
+      ghHtml += `<div class="meta-item"><div class="meta-label">Repo</div><div class="meta-value">${gh.repo?.full_name ?? '—'}</div></div>`;
+      ghHtml += `<div class="meta-item"><div class="meta-label">Commit</div><div class="meta-value" style="font-family:'JetBrains Mono',monospace;font-size:.8rem;">${gh.push?.commit?.sha ?? '—'}</div></div>`;
+      ghHtml += `<div class="meta-item"><div class="meta-label">Files</div><div class="meta-value">${gh.push?.commit?.files_changed?.length ?? '—'}</div></div>`;
+      ghHtml += `<div class="meta-item"><div class="meta-label">Additions</div><div class="meta-value">${gh.push?.commit?.additions ?? '—'} lines</div></div>`;
+      ghHtml += '</div>';
+      document.getElementById('bodyGithub').innerHTML = ghHtml;
+
+      // ── Logs ──
+      const logs = data.logs || [];
+      let logsHtml = '';
+      logs.forEach(l => {
+        const t = l.timestamp?.split('T')[1]?.split('.')[0] || '';
+        const isMcp = l.event === 'mcp_tool_call' || (l.agent || '').includes('mcp');
+        const agentClass = isMcp ? 'log-agent mcp-log' : 'log-agent';
+        logsHtml += `<div class="log-entry"><span class="${agentClass}">${escapeHtml(l.agent)}</span><span class="log-event">${escapeHtml(l.event)}</span><span class="log-time">${t}</span></div>`;
+      });
+      document.getElementById('bodyLogs').innerHTML = logsHtml || '<p style="color:var(--text-muted);font-size:.85rem;">No logs recorded.</p>';
+    }
+
+    // Enter key support
+    document.getElementById('promptInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') runBuild();
+    });
+  </script>
+</body>
+
+</html>
