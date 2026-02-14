@@ -23,19 +23,19 @@
 The system follows a strict **Parent-Child-Doctor** hierarchy:
 
 ```mermaid
-graph TD
-    User([User Prompt]) -->|1. Intention| Parent[Parent Orchestrator]
-    Parent -->|2. Spawn| Dev[Dev Agents Alpha/Beta]
-    Parent -->|2. Spawn| Ops[DevOps Agent]
+flowchart TD
+    User([User Prompt]) -->|"1. Intention"| Parent[Parent Orchestrator]
+    Parent -->|"2. Spawn"| Dev[Dev Agents Alpha/Beta]
+    Parent -->|"2. Spawn"| Ops[DevOps Agent]
     
-    subgraph "Execution Layer"
-        Dev -->|Code Gen| FileSystem
-        Ops -->|Docker/CI| FileSystem
+    subgraph ExecutionLayer ["Execution Layer"]
+        Dev -->|"Code Gen"| FileSystem
+        Ops -->|"Docker/CI"| FileSystem
     end
     
-    FileSystem -->|3. Audit| Doctor[Doctor Agent]
-    Doctor -->|4. Heal| FileSystem
-    Doctor -->|5. Report| Parent
+    FileSystem -->|"3. Audit"| Doctor[Doctor Agent]
+    Doctor -->|"4. Heal"| FileSystem
+    Doctor -->|"5. Report"| Parent
 ```
 
 ### Key Components
