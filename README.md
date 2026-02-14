@@ -71,7 +71,7 @@ graph TD
 
 ### 1. Clone & Setup
 ```bash
-git clone https://github.com/synapse-x-org/AI-Systems-Architect.git
+git clone https://github.com/KanavjeetS/AI-Systems-Architect.git
 cd AI-Systems-Architect
 ```
 
@@ -103,7 +103,7 @@ Visit **http://localhost:3000** to access the Neural Dashboard.
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see `CONTRIBUTING.md` for details on how to propose changes to the organism's DNA.
+We welcome contributions! Please fork the repository and submit a pull request.
 
 ## 📄 License
 
