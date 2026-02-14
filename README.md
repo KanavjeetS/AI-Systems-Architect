@@ -25,7 +25,7 @@ The system follows a strict **Parent-Child-Doctor** hierarchy:
 ```mermaid
 graph TD
     User([User Prompt]) -->|1. Intention| Parent[Parent Orchestrator]
-    Parent -->|2. Spawn| Dev[Dev Agents α/β]
+    Parent -->|2. Spawn| Dev[Dev Agents Alpha/Beta]
     Parent -->|2. Spawn| Ops[DevOps Agent]
     
     subgraph "Execution Layer"
